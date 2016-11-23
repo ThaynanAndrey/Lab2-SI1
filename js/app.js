@@ -37,4 +37,9 @@ app.controller("myController", function($scope) {
 		
 		$scope.progresso = total / $scope.tarefas.length * 100;
 	};
+	
+	$scope.taSafadao = function() {
+		
+		return $scope.progresso === 100;
+	};
 });

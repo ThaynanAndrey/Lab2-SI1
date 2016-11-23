@@ -40,16 +40,21 @@
 			</table>
 			
 			<div class="progress">
-			<div ng-model="progresso" class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="40"
-			aria-valuemin="0" aria-valuemax="100" ng-style="{width : ( progresso + '%' ) }">
-			{{progresso}}% Completo
+				<div ng-model="progresso" class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="40"
+				aria-valuemin="0" aria-valuemax="100" ng-style="{width : ( progresso + '%' ) }">
+				{{progresso}}% Completo
+				</div>
 			</div>
-			</div>
+			
+			<img ng-if="taSafadao()" src="http://www.ultracurioso.com.br/wp-content/uploads/2016/06/Wesley-Safad%C3%A3o-6.jpg"/>
+			
+			<br>
 			
 			<label>Nova Tarefa</label>
 			<input type="text" class="form-control" ng-model="novaTarefa" placeholder="ex: Comer Chocolate.">
 			<br>
 			<button type="button" class="btn btn-secondary" ng-click="adicionarTarefa(novaTarefa)">Adicionar</button>
+
 		</div>
 		
 	</body>
