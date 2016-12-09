@@ -7,11 +7,11 @@ angular.module("myApp")
 		this.nome = nome;
 		this.data = new Date();
 		this.realizada = false;
-		this.apagada = false;
 	};
 
 	$scope.tarefas = [ new Tarefa("Jogar Bola"),
-					   new Tarefa("Comer Cuscuz")
+					   new Tarefa("Comer Cuscuz"),
+					   new Tarefa("Treinar para a maratona")
 	];
 	
 	$scope.novaTarefa = "";
@@ -28,11 +28,12 @@ angular.module("myApp")
 	
 	$scope.removerTarefa = function(tarefa) {
 		
-		tarefa.apagada = true;
-		tarefa.realizada = false;
-		
-		console.log(tarefa);
-		
+		var indice = $scope.tarefas.indexOf(tarefa);
+
+		if (indice > -1) {
+ 		   $scope.tarefas.splice(indice, 1);
+		}
+
 		$scope.calculaProgresso();
 	};
 	
