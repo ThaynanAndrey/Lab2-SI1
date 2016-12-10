@@ -1,14 +1,8 @@
 body {
-	background: black; 
+	background-color: #FFFFFF; 
 }
 
 h2 {
-	color: pink;
-}
-
-p {
-
-	margin-left: 15px; 
-	padding:1.5em;
-
+	color: #000000;
+	font-family: Arial;
 }
