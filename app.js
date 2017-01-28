@@ -12,6 +12,11 @@ angular.module("myApp", ['ui.router'])
                 controller: "myController"
             })
 
+            .state('adicionarTarefa', {
+                url: "/adicionarTarefa",
+                templateUrl: "views/addTarefa.html"
+            })
+
             .state('contato', {
                 url: "/contato",
                 templateUrl: "views/contato.html"

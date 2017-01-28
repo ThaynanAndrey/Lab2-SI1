@@ -6,19 +6,23 @@
 		<thead>
 		  <tr>
 			<th>Tarefa</th>
-			<th>Data Agendada</th>
+			<th>Categoria</th>
+			<th>Prioridade</th>
+			<!--<th>Data Agendada</th>-->
 			<th>Resolvido</th>
 			<th></th>
 		  </tr>
 		</thead>
 
 		<tbody>
-		  <tr ng-repeat="tarefa in tarefas">
+		  <tr ng-click="toggleRight(right)" ng-repeat="tarefa in tarefas">
 			
 			<td>{{tarefa.nome}}</td>
-			<td>{{tarefa.data | date}}</td>
+			<!--<td>{{tarefa.data | date}}</td>-->
+			<td>{{tarefa.categoria}}</td>
+			<td>{{tarefa.prioridade}}</td>
 			<td>
-				<input type="checkbox" ng-model="tarefa.realizada" ng-change="calculaProgresso()">
+				<input type="checkbox" ng-model="tarefa.realizada" ng-change="calculaProgresso()"></input>
 			</td>
 			<td>
 				<button type="button" class="btn btn-secondary" ng-click="removerTarefa(tarefa)">Remover</button>
@@ -39,8 +43,9 @@
 	
 	<form name="novaTarefaForm">
 		<label>Nova Tarefa</label>
-		<input type="text" class="form-control" ng-model="novaTarefa" placeholder="ex: Comer Chocolate." ng-required="true">
-		<br>
+		<input type="text" class="form-control" ng-model="novaTarefa" placeholder="ex: Comer Chocolate." ng-required="true"></input>
+		</br>
 		<button type="button" class="btn btn-secondary" ng-click="adicionarTarefa(novaTarefa)" ng-disabled="novaTarefaForm.$invalid">Adicionar</button>
 	</form>
+
 </div>

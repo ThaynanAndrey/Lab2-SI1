@@ -1,6 +1,15 @@
 angular.module("myApp")
 
-.controller("myController", function($scope) {
+.controller("myController", function($scope, $http, $state) {
+
+	$scope.tarefas = [ //new Tarefa("Jogar Bola"),
+					   //new Tarefa("Comer Cuscuz"),
+					   //new Tarefa("Treinar para a maratona")
+	];
+
+	$http.get("http://localhost:8080/tarefas").then(function(response) {
+		$scope.tarefas = response.data;			
+	});
 
 	function Tarefa(nome, data) {
 		
@@ -8,11 +17,6 @@ angular.module("myApp")
 		this.data = new Date();
 		this.realizada = false;
 	};
-
-	$scope.tarefas = [ new Tarefa("Jogar Bola"),
-					   new Tarefa("Comer Cuscuz"),
-					   new Tarefa("Treinar para a maratona")
-	];
 	
 	$scope.novaTarefa = "";
 	$scope.progresso = 0;
@@ -32,8 +36,8 @@ angular.module("myApp")
 
 		if (indice > -1) {
  		   $scope.tarefas.splice(indice, 1);
+ 		   $http.delete("http://localhost:8080/tarefas/" + tarefa.id);
 		}
-
 		$scope.calculaProgresso();
 	};
 	
@@ -67,5 +71,4 @@ angular.module("myApp")
 		
 		return parseInt(numero) != parseFloat(numero);
 	};
-	
 });
