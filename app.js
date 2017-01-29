@@ -14,7 +14,8 @@ angular.module("myApp", ['ui.router'])
 
             .state('adicionarTarefa', {
                 url: "/adicionarTarefa",
-                templateUrl: "views/addTarefa.html"
+                templateUrl: "views/addTarefa.html",
+                controller: "myController"
             })
 
             .state('contato', {

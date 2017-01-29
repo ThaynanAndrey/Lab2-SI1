@@ -1,52 +1,59 @@
 angular.module("myApp")
 
-.controller("myController", function($scope, $http, $state) {
+.controller("myController", ['$scope', 'RestService', '$state', '$mdSidenav', function($scope, RestService, $state, $mdSidenav) {
 
-	$scope.tarefas = [ //new Tarefa("Jogar Bola"),
-					   //new Tarefa("Comer Cuscuz"),
-					   //new Tarefa("Treinar para a maratona")
-	];
+	$scope.tarefas = [];
+	$scope.tarefa = {};
 
-	$http.get("http://localhost:8080/tarefas").then(function(response) {
-		$scope.tarefas = response.data;			
+	RestService.find('http://localhost:8080/tarefas', function(response) {
+		$scope.tarefas = response.data;
 	});
 
-	function Tarefa(nome, data) {
-		
-		this.nome = nome;
-		this.data = new Date();
-		this.realizada = false;
-	};
-	
 	$scope.novaTarefa = "";
 	$scope.progresso = 0;
 	
 
-	$scope.adicionarTarefa = function(tarefa) {
-		$scope.tarefas.push(new Tarefa(tarefa));
-		$scope.novaTarefa = "";
+	$scope.salvarTarefa = function(tarefa) {
+		RestService.add('http://localhost:8080/tarefas', tarefa, function(response) {
+			$scope.tarefas = response.data;
+		});
+		$state.go('home');
+		$scope.tarefa = {};
 		$scope.calculaProgresso();
-		
-		delete $scope.tarefa;
+	};
+
+	$scope.novaTarefa = function() {
+		$state.go('adicionarTarefa');
 	};
 	
+	$scope.cancelarAdicaoTarefa = function() {
+		$state.go('home');
+		$scope.tarefa = {};
+	};
+
 	$scope.removerTarefa = function(tarefa) {
 		
 		var indice = $scope.tarefas.indexOf(tarefa);
 
 		if (indice > -1) {
  		   $scope.tarefas.splice(indice, 1);
- 		   $http.delete("http://localhost:8080/tarefas/" + tarefa.id);
+ 		   RestService.delete('http://localhost:8080/tarefas/' + tarefa.id);
 		}
 		$scope.calculaProgresso();
 	};
 	
+
+	$scope.removerTodasTarefas = function() {
+
+		for (var i = $scope.tarefas.length - 1; i >= 0; i--) {
+			$scope.removerTarefa($scope.tarefas[i]);
+		}
+	};
+
 	$scope.calculaProgresso = function() {
 
 		var total = 0;
-		
 		for(var i=0; i < $scope.tarefas.length; i++) {
-				
 			if($scope.tarefas[i].realizada)
 				total++;
 		}
@@ -64,6 +71,10 @@ angular.module("myApp")
 		}
 	};
 	
+	$scope.ordenarPor = function(ordenacao) {
+		$scope.tipoDeordenacao = ordenacao;
+	};
+
 	function isDecimal(numero) {
 
 		if(isNaN(numero)) 
@@ -71,4 +82,11 @@ angular.module("myApp")
 		
 		return parseInt(numero) != parseFloat(numero);
 	};
-});
+
+	$scope.apresentarSideNav = function(tarefa) {
+      return function() {
+        $mdSidenav("left").toggle();
+      }
+    };
+
+}]);

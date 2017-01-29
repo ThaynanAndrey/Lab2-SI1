@@ -1,13 +1,16 @@
 <div ng-controller="myController" class="container">
-		
+
+<div>
 	<h1>Agenda de Tarefas</h1>
-	
+
+	<input type="text" placeholder="Filtre sua busca por Nome ou Prioridade da Tarefa" class="form-control" ng-model="tipoDeCategoria">
+
 	<table class="table">
 		<thead>
 		  <tr>
-			<th>Tarefa</th>
+			<th><a href="" ng-click="ordenarPor('nome')"/>Tarefa</th>
 			<th>Categoria</th>
-			<th>Prioridade</th>
+			<th><a href="" ng-click="ordenarPor('categoria')"/>Prioridade</th>
 			<!--<th>Data Agendada</th>-->
 			<th>Resolvido</th>
 			<th></th>
@@ -15,7 +18,7 @@
 		</thead>
 
 		<tbody>
-		  <tr ng-click="toggleRight(right)" ng-repeat="tarefa in tarefas">
+		  <tr ng-click="toggleRight(right)" ng-repeat="tarefa in tarefas | filter: tipoDeCategoria | orderBy:tipoDeordenacao">
 			
 			<td>{{tarefa.nome}}</td>
 			<!--<td>{{tarefa.data | date}}</td>-->
@@ -38,14 +41,27 @@
 			{{progresso}}% Completo
 		</div>
 	</div>
-	
-	<br>
-	
-	<form name="novaTarefaForm">
-		<label>Nova Tarefa</label>
-		<input type="text" class="form-control" ng-model="novaTarefa" placeholder="ex: Comer Chocolate." ng-required="true"></input>
-		</br>
-		<button type="button" class="btn btn-secondary" ng-click="adicionarTarefa(novaTarefa)" ng-disabled="novaTarefaForm.$invalid">Adicionar</button>
-	</form>
 
+	<button type="button" class="btn btn-default" ng-click="novaTarefa()">Nova Tarefa</button>
+	<button type="button" ng-click="removerTodasTarefas()" class="btn btn-danger">Remover Todas Tarefas</button>
+	
+	<button type="button" class="btn btn-default" ng-click="apresentarSideNav()">Nova Tarefa</button>
+
+	<md-sidenav class="md-sidenav-left" md-component-id="left" md-disable-backdrop="" md-whiteframe="4">
+
+      <md-toolbar class="md-theme-indigo">
+        <h1 class="md-toolbar-tools">Disabled Backdrop</h1>
+      </md-toolbar>
+
+      <md-content layout-margin="">
+        <p>
+          This sidenav is not showing any backdrop, where users can click on it, to close the sidenav.
+        </p>
+        <md-button ng-click="" class="md-accent">
+          Close this Sidenav
+        </md-button>
+      </md-content>
+
+    </md-sidenav>
+</div>
 </div>
