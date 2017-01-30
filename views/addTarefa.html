@@ -26,13 +26,16 @@
 				</div>
 			</div>
 		   
+			<md-chips ng-model="tarefa.subTarefa" placeholder="Adicione uma tarefa" md-max-chips="5">
+			</md-chips>
+
 			<div class="form-group"> 
 			<label class="col-md-4 control-label">Prioridade</label>
 				<div class="col-md-4 selectContainer">
 					<div class="input-group">
 						<span class="input-group-addon"><i class="glyphicon glyphicon-list"></i></span>
 						<select ng-model="tarefa.prioridade" name="state" class="form-control selectpicker" >
-					<option>Por favor defina a prioridade da tarefa</option>
+						<option>Por favor defina a prioridade da tarefa</option>
 						<option>Alta</option>
 						<option>Média</option>
 						<option>Baixa</option>

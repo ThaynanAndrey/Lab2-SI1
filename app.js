@@ -1,4 +1,4 @@
-angular.module("myApp", ['ui.router']) 
+angular.module("myApp", ['ui.router', 'ngMaterial', 'ngMessages']) 
 
 .config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $urlRouterProvider){
     

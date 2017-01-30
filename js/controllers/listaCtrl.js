@@ -7,19 +7,45 @@ angular.module("myApp")
 
 	RestService.find('http://localhost:8080/tarefas', function(response) {
 		$scope.tarefas = response.data;
+		$scope.calculaProgresso();
 	});
 
 	$scope.novaTarefa = "";
 	$scope.progresso = 0;
 	
+	var reestruturarPrioridade = function() {
+
+		for (var i = 0; i < $scope.tarefas.length; i++) {
+			tranformaPrioridadeObjeto($scope.tarefas[i]);
+		}
+	};
+
+	var tranformaPrioridadeObjeto = function(tarefa) {
+		
+		var nivel;
+
+		if(tarefa.prioridade === "Alto")
+			nivel = 1;
+
+		else if(tarefa.prioridade === "Medio")
+			nivel = 2;
+
+		else
+			nivel = 3;
+
+		tarefa.prioridade = {
+								"tipo": prioridade,
+								"nivel": nivel
+							}
+	};
 
 	$scope.salvarTarefa = function(tarefa) {
 		RestService.add('http://localhost:8080/tarefas', tarefa, function(response) {
 			$scope.tarefas = response.data;
+			$scope.tarefa = {};
+			$scope.calculaProgresso();
+			$state.go('home');
 		});
-		$state.go('home');
-		$scope.tarefa = {};
-		$scope.calculaProgresso();
 	};
 
 	$scope.novaTarefa = function() {
@@ -38,8 +64,8 @@ angular.module("myApp")
 		if (indice > -1) {
  		   $scope.tarefas.splice(indice, 1);
  		   RestService.delete('http://localhost:8080/tarefas/' + tarefa.id);
+ 		   $scope.calculaProgresso();
 		}
-		$scope.calculaProgresso();
 	};
 	
 
