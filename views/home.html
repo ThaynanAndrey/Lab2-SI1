@@ -1,71 +1,81 @@
-<div ng-controller="myController" class="container">
+<div ng-controller="myController" layout="row">
+	<md-sidenav style="padding-top:50px; height: 100%; width: 300px; position: fixed;" layout="column" class="md-sidenav-left md-whiteframe-z2" md-component-id="left" md-is-locked-open="$mdMedia('gt-sm')">
 
-<div>
-	<h1>Agenda de Tarefas</h1>
-
-	<input type="text" placeholder="Filtre sua busca por Nome ou Prioridade da Tarefa" class="form-control" ng-model="tipoDeCategoria">
-
-	<table class="table">
-		<thead>
-		  <tr>
-			<th><a href="" ng-click="ordenarPor('nome')"/>Tarefa</th>
-			<th>Categoria</th>
-			<th><a href="" ng-click="ordenarPor('categoria')"/>Prioridade</th>
-			<!--<th>Data Agendada</th>-->
-			<th>Resolvido</th>
-			<th></th>
-		  </tr>
-		</thead>
-
-		<tbody>
-		  <tr ng-click="toggleRight(right)" ng-repeat="tarefa in tarefas | filter: tipoDeCategoria | orderBy:tipoDeordenacao">
-			
-			<td>{{tarefa.nome}}</td>
-			<!--<td>{{tarefa.data | date}}</td>-->
-			<td>{{tarefa.categoria}}</td>
-			<td>{{tarefa.prioridade}}</td>
-			<td>
-				<input type="checkbox" ng-model="tarefa.realizada" ng-change="calculaProgresso()"></input>
-			</td>
-			<td>
-				<button type="button" class="btn btn-secondary" ng-click="removerTarefa(tarefa)">Remover</button>
-			</td>
-		  </tr>
-		</tbody>
-		
-	</table>
-	
-	<div class="progress">
-		<div ng-model="progresso" class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="40"
-		aria-valuemin="0" aria-valuemax="100" ng-style="{width : ( progresso + '%' ) }">
-			{{progresso}}% Completo
+		<div class="list-group">
+		  <p type="button" class="list-group-item list-group-item-action active">
+		    Lista de Tarefas
+		  </p>
+		  <button type="button" class="list-group-item list-group-item-action" ng-repeat="listaDeTarefa in listaDeTarefas">{{listaDeTarefa.nome}}</button>
 		</div>
+
+		<md-list ng-repeat="task in tasks">
+			<md-list-item>	
+				{{task.name}}
+			</md-list-item>
+		</md-list>
+	</md-sidenav>
+
+	<div style="padding-left: 300px;" layout="column" class="container" flex id="content">
+		<md-content layout="column" class="md-padding">
+			<h1>Agenda de Tarefas</h1>
+
+			<input type="text" placeholder="Filtre sua busca por Nome ou Prioridade da Tarefa" class="form-control" ng-model="tipoDeCategoria">
+
+			<table class="table">
+				<thead>
+					<tr>
+						<th><a href="" ng-click="ordenarPor('nome')"/>Tarefa</th>
+						<th>Categoria</th>
+						<th><a href="" ng-click="ordenarPor('categoria')"/>Prioridade</th>
+						<!--<th>Data Agendada</th>-->
+						<th>Resolvido</th>
+						<th></th>
+					</tr>
+				</thead>
+
+				<tbody>
+					<tr ng-click="apresentarSideNav(tarefa)" ng-repeat="tarefa in tarefas | filter: tipoDeCategoria | orderBy:tipoDeordenacao">
+
+						<td>{{tarefa.nome}}</td>
+						<!--<td>{{tarefa.data | date}}</td>-->
+						<td>{{tarefa.categoria}}</td>
+						<td>{{tarefa.prioridade}}</td>
+						<td>
+							<input type="checkbox" ng-model="tarefa.realizada" ng-change="calculaProgresso()"></input>
+						</td>
+						<td>
+							<button type="button" class="btn btn-secondary" ng-click="removerTarefa(tarefa)">Remover</button>
+						</td>
+					</tr>
+				</tbody>
+
+			</table>
+
+			<div class="progress">
+				<div ng-model="progresso" class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="40"
+				aria-valuemin="0" aria-valuemax="100" ng-style="{width : ( progresso + '%' ) }">
+				{{progresso}}% Completo	</div>
+			</div>
+			<md-content layout="row" align="middle">
+				<button type="button" style="width: 200px" class="btn btn-default" ng-click="novaTarefa()">Nova Tarefa</button>
+				<button type="button" style="width: 200px" ng-click="removerTodasTarefas()" class="btn btn-danger">Remover Todas Tarefas</button>
+			</md-content>
+		</md-content>
 	</div>
 
-	<button type="button" class="btn btn-default" ng-click="novaTarefa()">Nova Tarefa</button>
-	<button type="button" ng-click="removerTodasTarefas()" class="btn btn-danger">Remover Todas Tarefas</button>
-	</br>	
+	<md-sidenav style="padding-top:50px; height: 100%; width: 300px; position: fixed;" class="md-sidenav-right md-whiteframe-4dp" md-component-id="taskInfo">
 
-	<!--
-	<button type="button" class="btn btn-default" ng-click="apresentarSideNav()">Open Side Nav</button>
+		<md-toolbar class="md-theme-light">
+			<h1 class="md-toolbar-tools">Sidenav Right</h1>
+		</md-toolbar>
+		<md-content layout-padding="">
+			<form>
+				<md-input-container>
+					<label for="testInput">Test input</label>
+					<input type="text" id="testInput" ng-model="data" md-autofocus="">
+				</md-input-container>
+			</form>
+		</md-content>
 
-	<md-sidenav class="md-sidenav-left" md-component-id="left" md-disable-backdrop="" md-whiteframe="4">
-
-      <md-toolbar class="md-theme-indigo">
-        <h1 class="md-toolbar-tools">Disabled Backdrop</h1>
-      </md-toolbar>
-
-      <md-content layout-margin="">
-        <p>
-          This sidenav is not showing any backdrop, where users can click on it, to close the sidenav.
-        </p>
-        <md-button ng-click="" class="md-accent">
-          Close this Sidenav
-        </md-button>
-      </md-content>
-
-    </md-sidenav>
-    -->
-
-</div>
+	</md-sidenav>
 </div>

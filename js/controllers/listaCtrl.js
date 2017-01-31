@@ -2,12 +2,29 @@ angular.module("myApp")
 
 .controller("myController", ['$scope', 'RestService', '$state', '$mdSidenav', function($scope, RestService, $state, $mdSidenav) {
 
-	$scope.tarefas = [];
+	$scope.listaDeTarefas = [];
+	$scope.tarefas = [{nome: "Fazer Sass", categoria: "Nada"}, {nome: "Seu cu", categoria: "Tudo"}];
 	$scope.tarefa = {};
+	$scope.tarefaSelecionada;
+	$scope.tarefa.subTarefa = [];
+	
+	// RestService.find('http://localhost:8080/tarefas', function(response) {
+	// 	$scope.tarefas = response.data;
+	// 	$scope.calculaProgresso();
+	// });
 
-	RestService.find('http://localhost:8080/tarefas', function(response) {
-		$scope.tarefas = response.data;
-		$scope.calculaProgresso();
+	RestService.find('http://localhost:8080/listaDeTarefas', function(response) {
+		$scope.listaDeTarefas = response.data;
+
+		console.log($scope.listaDeTarefas);
+		console.log($scope.listaDeTarefas[0]);
+
+		if(listaDeTarefas.length > 0) {
+			$scope.tarefas = $scope.listaDeTarefas[0].tarefas;
+		}
+		else {
+			$scope.tarefas = [];
+		}
 	});
 
 	$scope.novaTarefa = "";
@@ -34,9 +51,9 @@ angular.module("myApp")
 			nivel = 3;
 
 		tarefa.prioridade = {
-								"tipo": prioridade,
-								"nivel": nivel
-							}
+			"tipo": prioridade,
+			"nivel": nivel
+		}
 	};
 
 	$scope.salvarTarefa = function(tarefa) {
@@ -62,9 +79,9 @@ angular.module("myApp")
 		var indice = $scope.tarefas.indexOf(tarefa);
 
 		if (indice > -1) {
- 		   $scope.tarefas.splice(indice, 1);
- 		   RestService.delete('http://localhost:8080/tarefas/' + tarefa.id);
- 		   $scope.calculaProgresso();
+			$scope.tarefas.splice(indice, 1);
+			RestService.delete('http://localhost:8080/tarefas/' + tarefa.id);
+			$scope.calculaProgresso();
 		}
 	};
 	
@@ -110,9 +127,7 @@ angular.module("myApp")
 	};
 
 	$scope.apresentarSideNav = function(tarefa) {
-      return function() {
-        $mdSidenav("left").toggle();
-      }
-    };
-
+		$scope.tarefaSelecionada = tarefa;
+		$mdSidenav('taskInfo').toggle();
+	};
 }]);
