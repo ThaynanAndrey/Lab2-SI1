@@ -2,33 +2,36 @@ angular.module("myApp")
 
 .controller("myController", ['$scope', 'RestService', '$state', '$mdSidenav', function($scope, RestService, $state, $mdSidenav) {
 
+	$scope.novaTarefa = "";
+	$scope.progresso = 0;
 	$scope.listaDeTarefas = [];
-	$scope.tarefas = [{nome: "Fazer Sass", categoria: "Nada"}, {nome: "Seu cu", categoria: "Tudo"}];
+	$scope.tarefas = [];
 	$scope.tarefa = {};
 	$scope.tarefaSelecionada;
-	$scope.tarefa.subTarefa = [];
-	
-	// RestService.find('http://localhost:8080/tarefas', function(response) {
-	// 	$scope.tarefas = response.data;
-	// 	$scope.calculaProgresso();
-	// });
+	gerarTarefaNova();
 
+	function gerarTarefaNova() {
+		$scope.tarefa = {
+			nome: undefined,
+			categoria: undefined,
+			subTarefa: [],
+			prioridade: undefined,
+			realizada: undefined,
+			descricao: undefined
+		}
+	};
+	
 	RestService.find('http://localhost:8080/listaDeTarefas', function(response) {
 		$scope.listaDeTarefas = response.data;
 
-		console.log($scope.listaDeTarefas);
-		console.log($scope.listaDeTarefas[0]);
-
-		if(listaDeTarefas.length > 0) {
+		if($scope.listaDeTarefas.length > 0) {
 			$scope.tarefas = $scope.listaDeTarefas[0].tarefas;
+			$scope.calculaProgresso();
 		}
 		else {
 			$scope.tarefas = [];
 		}
 	});
-
-	$scope.novaTarefa = "";
-	$scope.progresso = 0;
 	
 	var reestruturarPrioridade = function() {
 
