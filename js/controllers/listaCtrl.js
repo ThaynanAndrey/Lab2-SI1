@@ -4,11 +4,14 @@ angular.module("myApp")
 
 	$scope.novaTarefa = "";
 	$scope.progresso = 0;
-	$scope.listaDeTarefas = [];
+	$scope.arrayListaDeTarefas = [];
+	$scope.listaDeTarefasAtual;
 	$scope.tarefas = [];
 	$scope.tarefa = {};
 	$scope.tarefaSelecionada;
 	gerarTarefaNova();
+	geraListaDeTarefas();
+	$scope.apresentarListaDeTarefas = true;
 
 	function gerarTarefaNova() {
 		$scope.tarefa = {
@@ -21,17 +24,20 @@ angular.module("myApp")
 		}
 	};
 	
-	RestService.find('http://localhost:8080/listaDeTarefas', function(response) {
-		$scope.listaDeTarefas = response.data;
+	function geraListaDeTarefas() {
+		RestService.find('http://localhost:8080/listaDeTarefas', function(response) {
+			$scope.arrayListaDeTarefas = response.data;
 
-		if($scope.listaDeTarefas.length > 0) {
-			$scope.tarefas = $scope.listaDeTarefas[0].tarefas;
-			$scope.calculaProgresso();
-		}
-		else {
-			$scope.tarefas = [];
-		}
-	});
+			if($scope.arrayListaDeTarefas.length > 0) {
+				$scope.tarefas = $scope.arrayListaDeTarefas[0].tarefas;
+				$scope.listaDeTarefasAtual = $scope.arrayListaDeTarefas[0];
+				$scope.calculaProgresso();
+			}
+			else {
+				$scope.tarefas = [];
+			}
+		});
+	};
 	
 	var reestruturarPrioridade = function() {
 
@@ -59,7 +65,32 @@ angular.module("myApp")
 		}
 	};
 
+	$scope.caregarTarefasDaListaEspecifica = function(listaDeTarefa) {
+		$scope.listaDeTarefasAtual = listaDeTarefa;
+		$scope.tarefas = listaDeTarefa.tarefas;
+		$scope.calculaProgresso();
+	};
+
+	$scope.criarNovaListaDeTarefa = function() {
+		$scope.apresentarListaDeTarefas = false;
+	};
+
+	$scope.cancelarCiracaoNovaListaDeTarefa = function() {
+		$scope.apresentarListaDeTarefas = true;
+	};
+
+	$scope.salvarListaDeTarefa = function(novaListaDeTarefas) {
+
+		RestService.add('http://localhost:8080/listaDeTarefas', novaListaDeTarefas, function(response) {
+			geraListaDeTarefas();
+			$scope.novaListaDeTarefas = {};
+			$scope.apresentarListaDeTarefas = true;	
+		});
+	};
+
 	$scope.salvarTarefa = function(tarefa) {
+		tarefa.listaDeTarefas = { "id": $scope.listaDeTarefasAtual.id};
+
 		RestService.add('http://localhost:8080/tarefas', tarefa, function(response) {
 			$scope.tarefas = response.data;
 			$scope.tarefa = {};

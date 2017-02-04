@@ -1,23 +1,36 @@
 <div ng-controller="myController" layout="row">
 	<md-sidenav style="padding-top:50px; height: 100%; width: 300px; position: fixed;" layout="column" class="md-sidenav-left md-whiteframe-z2" md-component-id="left" md-is-locked-open="$mdMedia('gt-sm')">
 
-		<div class="list-group">
+		<div class="list-group" ng-show="apresentarListaDeTarefas">
 		  <p type="button" class="list-group-item list-group-item-action active">
 		    Lista de Tarefas
 		  </p>
-		  <button type="button" class="list-group-item list-group-item-action" ng-repeat="listaDeTarefa in listaDeTarefas">{{listaDeTarefa.nome}}</button>
+		  <button type="button" ng-click="caregarTarefasDaListaEspecifica(listaDeTarefa)" class="list-group-item list-group-item-action" ng-repeat="listaDeTarefa in arrayListaDeTarefas">{{listaDeTarefa.nome}}</button>
+		  </br>
+		  <button type="button" ng-click="criarNovaListaDeTarefa()" class="btn btn-success">Criar nova Lista de Tarefas</button>
 		</div>
 
-		<md-list ng-repeat="task in tasks">
-			<md-list-item>	
-				{{task.name}}
-			</md-list-item>
-		</md-list>
+		 <div class="modal-dialog" ng-show="!apresentarListaDeTarefas">
+			<div class="loginmodal-container">
+			  <form>
+				<p type="button" class="list-group-item list-group-item-action active">
+				    Nova Lista de Tarefas
+				</p>
+				</br>
+				<label class="col-md-4 control-label">Nome</label>
+				<input type="text" placeholder="Nome da Lista de Tarefas" class="form-control" ng-model="novaListaDeTarefas.nome">
+				</br>
+				<button type="button" ng-click="salvarListaDeTarefa(novaListaDeTarefas)" class="btn btn-success"><span class="glyphicon glyphicon-ok"></span> Adicionar</button>
+			    <button type="button" ng-click="cancelarCiracaoNovaListaDeTarefa()" class="btn btn-danger"><span class="glyphicon glyphicon-remove"></span> Cancelar</button>
+			  </form>
+			</div>
+		</div>
+
 	</md-sidenav>
 
 	<div style="padding-left: 300px;" layout="column" class="container" flex id="content">
 		<md-content layout="column" class="md-padding">
-			<h1>Agenda de Tarefas</h1>
+			<h1>{{listaDeTarefasAtual.nome}}</h1>
 
 			<input type="text" placeholder="Filtre sua busca por Nome ou Prioridade da Tarefa" class="form-control" ng-model="tipoDeCategoria">
 
