@@ -12,6 +12,7 @@ angular.module("myApp")
 	gerarTarefaNova();
 	geraListaDeTarefas();
 	$scope.apresentarListaDeTarefas = true;
+	$scope.addNovaTarefa = false;
 
 	function gerarTarefaNova() {
 		$scope.tarefa = {
@@ -85,6 +86,7 @@ angular.module("myApp")
 			geraListaDeTarefas();
 			$scope.novaListaDeTarefas = {};
 			$scope.apresentarListaDeTarefas = true;	
+			$scope.calculaProgresso();
 		});
 	};
 
@@ -92,19 +94,21 @@ angular.module("myApp")
 		tarefa.listaDeTarefas = { "id": $scope.listaDeTarefasAtual.id};
 
 		RestService.add('http://localhost:8080/tarefas', tarefa, function(response) {
-			$scope.tarefas = response.data;
+			geraListaDeTarefas();
 			$scope.tarefa = {};
+			$scope.addNovaTarefa = false;
 			$scope.calculaProgresso();
-			$state.go('home');
 		});
 	};
 
 	$scope.novaTarefa = function() {
-		$state.go('adicionarTarefa');
+		$scope.addNovaTarefa = true;
+		//$state.go('adicionarTarefa');
 	};
 	
 	$scope.cancelarAdicaoTarefa = function() {
-		$state.go('home');
+		//$state.go('home');
+		$scope.addNovaTarefa = false;
 		$scope.tarefa = {};
 	};
 
@@ -118,7 +122,11 @@ angular.module("myApp")
 			$scope.calculaProgresso();
 		}
 	};
-	
+
+	$scope.editarTarefa = function(tarefaSelecionada) {
+		$scope.tarefa = tarefaSelecionada;
+		$scope.addNovaTarefa = true;
+	};
 
 	$scope.removerTodasTarefas = function() {
 
