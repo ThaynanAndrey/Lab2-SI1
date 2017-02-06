@@ -7,9 +7,12 @@
 			  <h4 type="text" class="list-group-item list-group-item-info">
 			    Lista de Tarefas
 			  </h4>
-			  <button type="button" ng-click="caregarTarefasDaListaEspecifica(listaDeTarefa)" class="list-group-item list-group-item-action" ng-repeat="listaDeTarefa in arrayListaDeTarefas">{{listaDeTarefa.nome}}</button>
+			  <button type="button" ng-click="caregarTarefasDaListaEspecifica(listaDeTarefa)" class="list-group-item list-group-item-action" ng-repeat="listaDeTarefa in arrayListaDeTarefas">			  	
+			  	{{listaDeTarefa.nome}}
+			  </button>
 			  </br>
 			  <button type="button" ng-click="criarNovaListaDeTarefa()" class="btn btn-success">Criar nova Lista de Tarefas</button>
+			  <button type="button" ng-click="removerTodasAsListasDeTarefa()" class="btn btn-danger">Limpar</button>
 			</div>
 
 			 <div class="modal-dialog" ng-show="!apresentarListaDeTarefas">
@@ -34,6 +37,8 @@
 			<md-content layout="column" class="md-padding">
 				<h1>{{listaDeTarefasAtual.nome}}</h1>
 
+				<button type="button" class="btn btn-danger" ng-click="removerListaDeTarefas(listaDeTarefasAtual)">Excluir a Lista de Tarefas {{listaDeTarefasAtual.nome}}.</button>
+
 				<input type="text" placeholder="Filtre sua busca por Nome ou Prioridade da Tarefa" class="form-control" ng-model="tipoDeCategoria">
 
 				<table class="table">
@@ -42,7 +47,6 @@
 							<th><a href="" ng-click="ordenarPor('nome')"/>Tarefa</th>
 							<th>Categoria</th>
 							<th><a href="" ng-click="ordenarPor('categoria')"/>Prioridade</th>
-							<th>Resolvido</th>
 							<th></th>
 						</tr>
 					</thead>
@@ -53,9 +57,11 @@
 							<td>{{tarefa.nome}}</td>
 							<td>{{tarefa.categoria}}</td>
 							<td>{{tarefa.prioridade}}</td>
+							<!--
 							<td>
 								<input type="checkbox" ng-model="tarefa.realizada" ng-change="calculaProgresso()"></input>
 							</td>
+							-->
 						</tr>
 					</tbody>
 
@@ -99,7 +105,8 @@
 			<fieldset>
 
 			<!-- Form Name -->
-			<legend>Adicione uma nova Tarefa a lista {{listaDeTarefasAtual.nome}}!</legend>
+			<legend ng-if="!isEditTarefa">Adicione uma nova Tarefa a lista {{listaDeTarefasAtual.nome}}!</legend>
+			<legend ng-if="isEditTarefa">Edite a Tarefa {{tarefa.nome}} da lista {{listaDeTarefasAtual.nome}}!</legend>
 
 				<div class="form-group">
 					<label class="col-md-4 control-label">Nome da Tarefa</label>  
@@ -178,7 +185,8 @@
 				<div class="form-group">
 				  <label class="col-md-4 control-label"></label>
 				  <div class="col-md-4">
-				    <button type="button" ng-click="salvarTarefa(tarefa)" class="btn btn-success"><span class="glyphicon glyphicon-ok"></span> Adicionar</button>
+				    <button ng-if="!isEditTarefa" type="button" ng-click="salvarTarefa(tarefa)" class="btn btn-success"><span class="glyphicon glyphicon-ok"></span> Adicionar</button>
+				    <button ng-if="isEditTarefa" type="button" ng-click="salvarTarefa(tarefa)" class="btn btn-success"><span class="glyphicon glyphicon-ok"></span> Editar</button>
 				    <button type="button" ng-click="cancelarAdicaoTarefa()" class="btn btn-danger"><span class="glyphicon glyphicon-remove"></span> Cancelar</button>
 				  </div>
 				</div>

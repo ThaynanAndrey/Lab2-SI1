@@ -85,7 +85,7 @@ angular.module("myApp")
 		RestService.add('http://localhost:8080/listaDeTarefas', novaListaDeTarefas, function(response) {
 			geraListaDeTarefas();
 			$scope.novaListaDeTarefas = {};
-			$scope.apresentarListaDeTarefas = true;	
+			$scope.apresentarListaDeTarefas = true;
 			$scope.calculaProgresso();
 		});
 	};
@@ -112,6 +112,14 @@ angular.module("myApp")
 		$scope.tarefa = {};
 	};
 
+	$scope.removerListaDeTarefas = function(listaDeTarefas) {
+		var indice = $scope.arrayListaDeTarefas.indexOf(listaDeTarefas);
+		$scope.arrayListaDeTarefas.splice(indice, 1);
+
+		RestService.delete('http://localhost:8080/listaDeTarefas/' + listaDeTarefas.id);
+		//geraListaDeTarefas();
+	};
+
 	$scope.removerTarefa = function(tarefa) {
 		
 		var indice = $scope.tarefas.indexOf(tarefa);
@@ -123,15 +131,35 @@ angular.module("myApp")
 		}
 	};
 
+	$scope.isEditTarefa = false;
+
 	$scope.editarTarefa = function(tarefaSelecionada) {
+		$scope.isEditTarefa = true;
 		$scope.tarefa = tarefaSelecionada;
 		$scope.addNovaTarefa = true;
+	};
+
+	$scope.selectEditTarefa = function() {
+
+		RestService.edit('http://localhost:8080/tarefas', $scope.tarefa, function(response) {
+			geraListaDeTarefas();
+			$scope.tarefa = {};
+			$scope.isEditTarefa = false;
+			$scope.calculaProgresso();
+		});
+
 	};
 
 	$scope.removerTodasTarefas = function() {
 
 		for (var i = $scope.tarefas.length - 1; i >= 0; i--) {
 			$scope.removerTarefa($scope.tarefas[i]);
+		}
+	};
+
+	$scope.removerTodasAsListasDeTarefa = function() {
+		for (var i = $scope.arrayListaDeTarefas.length - 1; i >= 0; i--) {
+			$scope.removerListaDeTarefas($scope.arrayListaDeTarefas[i]);
 		}
 	};
 
