@@ -7,6 +7,7 @@ angular.module("myApp")
 	$scope.arrayListaDeTarefas = [];
 	$scope.listaDeTarefasAtual;
 	$scope.tarefas = [];
+	$scope.prioridades = ["Alta", "Média", "Baixa"];
 	$scope.tarefa = {};
 	$scope.tarefaSelecionada;
 	gerarTarefaNova();
@@ -90,24 +91,43 @@ angular.module("myApp")
 		});
 	};
 
+
+	var addSubtarefasNasTarefas = function(lista, idTarefa) {
+
+		if(lista.length == 0)
+			return
+
+		subtarefa = { 
+						"nome": lista[lista.length-1],
+						"tarefa": { "id": idTarefa }
+					};
+		lista.pop();
+
+		RestService.add('http://localhost:8080/subtarefas', subtarefa, function(response) {
+			
+			addSubtarefasNasTarefas(lista, idTarefa);
+		});
+	};
+
 	$scope.salvarTarefa = function(tarefa) {
 		tarefa.listaDeTarefas = { "id": $scope.listaDeTarefasAtual.id};
+		lista = tarefa.subtarefas;
+		tarefa.subtarefas = [];
 
 		RestService.add('http://localhost:8080/tarefas', tarefa, function(response) {
 			geraListaDeTarefas();
-			$scope.tarefa = {};
+			gerarTarefaNova();
 			$scope.addNovaTarefa = false;
 			$scope.calculaProgresso();
+			addSubtarefasNasTarefas(lista, response.data.id);
 		});
 	};
 
 	$scope.novaTarefa = function() {
 		$scope.addNovaTarefa = true;
-		//$state.go('adicionarTarefa');
 	};
 	
 	$scope.cancelarAdicaoTarefa = function() {
-		//$state.go('home');
 		$scope.addNovaTarefa = false;
 		$scope.tarefa = {};
 	};
@@ -143,7 +163,7 @@ angular.module("myApp")
 
 		RestService.edit('http://localhost:8080/tarefas', $scope.tarefa, function(response) {
 			geraListaDeTarefas();
-			$scope.tarefa = {};
+			gerarTarefaNova();
 			$scope.isEditTarefa = false;
 			$scope.calculaProgresso();
 		});
@@ -198,6 +218,7 @@ angular.module("myApp")
 
 	$scope.apresentarSideNav = function(tarefa) {
 		$scope.tarefaSelecionada = tarefa;
+		$scope.subtarefasAtuais = $scope.tarefaSelecionada.subtarefas;
 		$mdSidenav('taskInfo').toggle();
 	};
 }]);
